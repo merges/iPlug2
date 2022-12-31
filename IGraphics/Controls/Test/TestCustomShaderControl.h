@@ -107,7 +107,7 @@ public:
       return program;
     };
     
-    printf("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
+//    printf("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
 
     #ifdef IGRAPHICS_GL2
     static const char vs_str[] =
@@ -133,6 +133,9 @@ public:
 
     #ifdef IGRAPHICS_GL2
     static const char fs_str[] =
+#ifdef IGRAPHICS_GLES3
+    "precision lowp float;"
+#endif
         "varying vec4 color;\n"
         "uniform vec4 color2;\n"
         "void main() {\n"
