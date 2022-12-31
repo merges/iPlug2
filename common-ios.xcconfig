@@ -76,6 +76,7 @@ STB_PATH = $(DEPS_PATH)/IGraphics/STB
 YOGA_PATH = $(DEPS_PATH)/IGraphics/yoga
 
 SKIA_PATH = $(DEPS_PATH)/Build/src/skia
+ANGLE_PATH = $(DEPS_PATH)/Build/src/angle
 
 SKIA_INC_PATHS = $(SKIA_PATH)
 

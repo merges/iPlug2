@@ -98,6 +98,7 @@ STB_PATH = $(DEPS_PATH)/IGraphics/STB
 FT_PATH = $(BUILT_LIBS_INC_PATH)/freetype2
 SKIA_PATH = $(DEPS_PATH)/Build/src/skia
 YOGA_PATH = $(DEPS_PATH)/IGraphics/yoga
+ANGLE_PATH = $(DEPS_PATH)/Build/src/angle
 
 SKIA_INC_PATHS = $(SKIA_PATH)
 
