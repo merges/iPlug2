@@ -331,18 +331,16 @@ APIBitmap* IGraphicsNanoVG::LoadAPIBitmap(const char* fileNameOrResID, int scale
 
     if (pResData)
     {
-      ActivateGLContext(); // no-op on non WIN/GL
+      ScopedActivateGLContext activateGLCtx {this};
       idx = nvgCreateImageMem(mVG, nvgImageFlags, (unsigned char*) pResData, size);
-      DeactivateGLContext(); // no-op on non WIN/GL
     }
   }
   else
 #endif
   if (location == EResourceLocation::kAbsolutePath)
   {
-    ActivateGLContext(); // no-op on non WIN/GL
+    ScopedActivateGLContext activateGLCtx {this};
     idx = nvgCreateImage(mVG, fileNameOrResID, nvgImageFlags);
-    DeactivateGLContext(); // no-op on non WIN/GL
   }
 
   return new Bitmap(mVG, fileNameOrResID, scale, idx, location == EResourceLocation::kPreloadedTexture);
@@ -358,10 +356,11 @@ APIBitmap* IGraphicsNanoVG::LoadAPIBitmap(const char* name, const void* pData, i
     int idx = 0;
     int nvgImageFlags = 0;
 
-    ActivateGLContext();
-    idx = idx = nvgCreateImageMem(mVG, nvgImageFlags, (unsigned char*)pData, dataSize);
-    DeactivateGLContext();
-
+    {
+      ScopedActivateGLContext activateGLCtx {this};
+      idx = idx = nvgCreateImageMem(mVG, nvgImageFlags, (unsigned char*)pData, dataSize);
+    }
+    
     pBitmap = new Bitmap(mVG, name, scale, idx, false);
 
     storage.Add(pBitmap, name, scale);
@@ -480,8 +479,8 @@ void IGraphicsNanoVG::OnViewDestroyed()
 
 void IGraphicsNanoVG::DrawResize()
 {
-  ActivateGLContext();
-  
+  ScopedActivateGLContext activateGLCtx {this};
+
   if (mMainFrameBuffer != nullptr)
     nvgDeleteFramebuffer(mMainFrameBuffer);
   
@@ -492,8 +491,6 @@ void IGraphicsNanoVG::DrawResize()
     if (mMainFrameBuffer == nullptr)
       DBGMSG("Could not init FBO.\n");
   }
-  
-  DeactivateGLContext();
 }
 
 void IGraphicsNanoVG::BeginFrame()
