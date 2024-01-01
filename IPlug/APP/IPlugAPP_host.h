@@ -82,16 +82,26 @@ class IPlugAPPHost
 {
 public:
   
-  /** Used to store an audio device ID and a flag to validate it */
-  struct ValidatedID
+  /** Used to store an audio device ID with a flag to indicate that there is no valid ID */
+  class ValidatedID
   {
-    ValidatedID() : mDeviceID(0), mValid(false) {}
-    ValidatedID(uint32_t deviceID) : mDeviceID(deviceID), mValid(true) {}
+  public:
+    
+    ValidatedID() : mID(0), mEmpty(true) {}
+    ValidatedID(uint32_t deviceID) : mID(deviceID), mEmpty(false) {}
 
-    /** The device ID used by RTAudio to represent the device */
-    uint32_t mDeviceID;
-    /** A valid indicating if this object contains a valid ID */
-    bool mValid;
+    /** Returns the device ID used by RTAudio to represent the device
+     * @return The device ID used by RTAudio to represent the device. */
+    uint32_t ID() const { return mID; }
+    
+    /** Returns a boolean indicating if the ID is empty (non-valid)
+     * @return A boolean indicating if the ID is empty (non-valid). */
+    bool IsEmpty() const  { return mEmpty; }
+    
+  private:
+    
+    uint32_t mID;
+    bool mEmpty;
   };
   
   /** Used to manage changes to app I/O */

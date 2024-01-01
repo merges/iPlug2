@@ -420,30 +420,30 @@ bool IPlugAPPHost::TryToChangeAudio()
   bool failedToFindDevice = false;
   bool resetToDefault = false;
 
-  if (!inputID.mValid)
+  if (inputID.IsEmpty())
   {
-    if (mDefaultInputDev.mValid)
+    if (!mDefaultInputDev.IsEmpty())
     {
       resetToDefault = true;
       inputID = mDefaultInputDev;
 
       if (mAudioInputDevIDs.size())
-        mState.mAudioInDev.Set(GetAudioDeviceName(inputID.mDeviceID).c_str());
+        mState.mAudioInDev.Set(GetAudioDeviceName(inputID.ID()).c_str());
     }
     else
       failedToFindDevice = true;
   }
 
-  if (!outputID.mValid)
+  if (outputID.IsEmpty())
   {
-    if (mDefaultOutputDev.mValid)
+    if (!mDefaultOutputDev.IsEmpty())
     {
       resetToDefault = true;
 
       outputID = mDefaultOutputDev;
 
       if (mAudioOutputDevIDs.size())
-        mState.mAudioOutDev.Set(GetAudioDeviceName(outputID.mDeviceID).c_str());
+        mState.mAudioOutDev.Set(GetAudioDeviceName(outputID.ID()).c_str());
     }
     else
       failedToFindDevice = true;
@@ -458,9 +458,9 @@ bool IPlugAPPHost::TryToChangeAudio()
   if (failedToFindDevice)
     MessageBox(gHWND, "Please check the audio settings", "Error", MB_OK);
 
-  if (inputID.mValid && outputID.mValid)
+  if (!inputID.IsEmpty() && !outputID.IsEmpty())
   {
-    return InitAudio(inputID.mDeviceID, outputID.mDeviceID, mState.mAudioSR, mState.mBufferSize);
+    return InitAudio(inputID.ID(), outputID.ID(), mState.mAudioSR, mState.mBufferSize);
   }
 
   return false;
