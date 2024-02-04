@@ -16,6 +16,7 @@
 
 #import "IPlugAUViewController.h"
 #import <CoreAudioKit/CoreAudioKit.h>
+#import <AudioUnit/AUAudioUnit.h>
 
 #if !__has_feature(objc_arc)
 #error This file must be compiled with Arc. Use -fobjc-arc flag
@@ -24,6 +25,7 @@
 @interface AppViewController ()
 {
   IPlugAUPlayer* player;
+  id<AUMessageChannel> messageChannel API_AVAILABLE(macos(13), ios(16.0));
   IPLUG_AUVIEWCONTROLLER* pluginVC;
   IBOutlet UIView* auView;
 }
@@ -72,7 +74,9 @@
 
   [player loadAudioUnitWithComponentDescription:desc completion:^{
     self->pluginVC.audioUnit = (IPLUG_AUAUDIOUNIT*) self->player.currentAudioUnit;
-
+    if (@available(iOS 16.0, macOS 13.0, *)) {
+      self->messageChannel = [self->pluginVC.audioUnit messageChannelFor:@"iplug"];
+    }
     [self embedPlugInView];
   }];
   

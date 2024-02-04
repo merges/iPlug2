@@ -22,6 +22,13 @@
 
 using namespace iplug;
 
+API_AVAILABLE(macos(13), ios(16.0))
+@interface IPLUG_AU_MESSAGE_CHANNEL : NSObject<AUMessageChannel>
+@end
+
+@implementation IPLUG_AU_MESSAGE_CHANNEL
+@end
+
 @interface IPLUG_AUAUDIOUNIT ()
 
 @property AUAudioUnitBusArray* mInputBusArray;
@@ -795,6 +802,15 @@ static AUAudioUnitPreset* NewAUPreset(NSInteger number, NSString* pName)
   dispatch_async(dispatch_get_main_queue(), ^{
     self->mPlug->OnHostSelectedViewConfiguration((int) [viewConfiguration width], (int) [viewConfiguration height]);
   });
+}
+
+- (id<AUMessageChannel> _Nonnull)messageChannelFor:(NSString * _Nonnull)channelName
+{
+  if (@available(macOS 13.0, iOS 16.0, *))
+  {
+    return [[IPLUG_AU_MESSAGE_CHANNEL alloc] init];
+  }
+  return nil;
 }
 
 #pragma mark - IPlugAUAudioUnit
