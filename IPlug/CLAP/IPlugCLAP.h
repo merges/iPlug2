@@ -174,7 +174,10 @@ private:
   
   // Helper to attach GUI Windows
   bool GUIWindowAttach(void* parent) noexcept;
-  
+
+  // Parameter flushing from GUI
+  void ParamsCheckForFlush();
+
   // Parameter Helpers
   void ProcessInputEvents(const clap_input_events* pInputEvents) noexcept;
   void ProcessOutputParams(const clap_output_events* pOutputParamChanges) noexcept;

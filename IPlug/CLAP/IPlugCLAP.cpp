@@ -58,9 +58,16 @@ uint32_t IPlugCLAP::tailGet() const noexcept
   return GetTailIsInfinite() ? std::numeric_limits<uint32_t>::max() : GetTailSize();
 }
 
+void IPlugCLAP::ParamsCheckForFlush()
+{
+  if (!isProcessing())
+    runOnMainThread([&](){ if (!isBeingDestroyed()) GetClapHost().paramsRequestFlush(); });
+}
+
 void IPlugCLAP::BeginInformHostOfParamChange(int idx)
 {
   mParamValuesToHost.PushFromArgs(ParamToHost::Type::Begin, idx, 0.0);
+  ParamsCheckForFlush();
 }
 
 void IPlugCLAP::InformHostOfParamChange(int idx, double normalizedValue)
@@ -70,11 +77,13 @@ void IPlugCLAP::InformHostOfParamChange(int idx, double normalizedValue)
   const double value = isDoubleType ? normalizedValue : pParam->FromNormalized(normalizedValue);
   
   mParamValuesToHost.PushFromArgs(ParamToHost::Type::Value, idx, value);
+  ParamsCheckForFlush();
 }
 
 void IPlugCLAP::EndInformHostOfParamChange(int idx)
 {
   mParamValuesToHost.PushFromArgs(ParamToHost::Type::End, idx, 0.0);
+  ParamsCheckForFlush();
 }
 
 bool IPlugCLAP::EditorResize(int viewWidth, int viewHeight)
