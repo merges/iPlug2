@@ -19,7 +19,7 @@
 
 #include "IPlugAPIBase.h"
 #include "IPlugProcessor.h"
-#include "plugin.hh" 
+#include "plugin.hh"
 
 #include "config.h"   // This is your plugin's config.h.
 
